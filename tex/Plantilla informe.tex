@@ -180,7 +180,7 @@ La fotometr\'ia es el \'area de la ciencia donde se mide la luz, es decir, la ca
 Hay varias t\'ecnicas de fotometr\'ia; para este trabajo, se utiliza una llamada Fotometr\'ia de Apertura. \'Esta consiste en tomar la imagen de la estrella y elegir un radio de apertura, el cual define un c\'irculo dentro del cual debiese estar todo el flujo de la estrella, para integrar el brillo proveniente de ese c\'irculo (es decir, sumar la informaci\'on de los electrones excitados en ese pixel del CCD). Con esto, se obtiene el flujo de la luz proveniente de toda la estrella. Adem\'as del radio de apertura, se elige un anillo alrededor de la estrella (caracterizado por dos radios) el cual se usa como correcci\'on, ya que el cielo alrededor de la estrella no es completamente negro en la imagen captada.
 
 
-El objetivo de este trabajo es armar desde cero las herramientas computacionales que se utilizan para hacer fotometr\'ia de apertura. Se debe armar el programa que, teniendo los datos, puedan leerlos y realizar una lectura de la cantidad de luz (cantidad de electrones excitados en la placa CCD). El programa se hace en lenguaje Python 2.7, usando el paquete astropy.io para el manejo de los archivos que se entregan (de extensi\'on .fits), matplotlib para todos los gr\'aficos e im\'agenes resultantes y scipy para las funciones matem\'aticas necesarias.
+El objetivo de este trabajo es armar desde cero las herramientas computacionales que se utilizan para hacer fotometr\'ia de apertura. Se debe armar el programa que, teniendo los datos, puedan leerlos y realizar una lectura de la cantidad de luz (cantidad de electrones excitados en la placa CCD). Un objetivo secundario es, usando este programa, hacer un an\'alisis de la curva de luz en el tiempo de una estrella, para determinar si hay alg\'un tr\'ansito en alguna de ellas (y posiblemente un exoplaneta). El programa se hace en lenguaje Python 2.7, usando el paquete astropy.io para el manejo de los archivos que se entregan (de extensi\'on .fits), matplotlib para todos los gr\'aficos e im\'agenes resultantes y scipy para las funciones matem\'aticas necesarias. 
 
 \section{Desarrollo}
 \subsection{Procedimiento}
@@ -190,23 +190,27 @@ Para cumplir el objetivo de este trabajo, se divide en cuatro pasos:
 \begin{itemize}
 	\item Creaci\'on de los master Bias y Flats: dentro de los archivos se encuentran archivos de tipo Bias (que muestran una foto en negro, de la cual se saca c\'omo es la imagen para ausencia de luz) y Flats (fotos de un domo de color parejo, para encontrar los defectos propios de la c\'amara CCD ocupada). Se necesita un promedio de ambos para corregir las im\'agenes obtenidas.
 	\item Detecci\'on del centro de masa de la estrella observada: para integrar el brillo de la estrella se necesita saber d\'onde se ubica su centro. Se estima a trav\'es del centro de masa, que en este caso es el centro de donde llega m\'as brillo.
-	\item Creaci\'on del perfil radial de la estrella: da la informaci\'on del flujo a cierto radio desde el centro de la estrella. De esta forma se puede determinar el radio de la estrella y lo que es cielo.
+	\item Creaci\'on del perfil radial de la estrella: da la informaci\'on del flujo a cierto radio desde el centro de la estrella. De esta forma se puede determinar el radio de la estrella y lo que corresponde a espacio exterior.
 	\item Fotometr\'ia de apertura: teniendo lo anterior, se puede integrar para obtener el flujo de la estrella. 
 \end{itemize}
 
 Cada uno de estos pasos representa una funci\'on (o dos) que deben implementarse en el programa. 
 
+Para escribir el c\'odigo, se usa el editor EMACS, trabajando desde el servidor Wasabi. Los datos .fits a utilizar son los de la observaci\'on wasp5: cada uno de estos archivos tiene 5 headers, un PrimaryHDU m\'as 4 ImageHDU, dado que la imagen est\'a dividida en 4 franjas. 
+
+
 \subsection{Resultados}
 
+El c\'odigo realizado contiene las funciones para los 4 pasos, adem\'as de mostrar las im\'agenes para el primer Header con imagen y una estampilla con una de las estrellas que se elige para trabajar. Para lo que se relaciona con el an\'alisis de alguna estrella en las im\'agenes, se trabaja con una estampilla que a\'isla a la estrella a analizar de las dem\'as.
 
-\section{Resultados}
-La figura 1 muestra la interpolaci\'on con polinomios de Lagrange. De la figura se aprecia que \'esta aproximaci\'on es m\'as fiel a la funci\'on original a medida se aumenta la cantidad de puntos utilizados para la interpolaci\'on, sin embargo a los extremos se observa un comportamiento oscilatorio de la aproximaci\'on, conocido como el Fen\'omeno de Runge\footnote{https://en.wikipedia.org/wiki/Runge\%27s\_phenomenon}.
+\begin{itemize}
+	\item En la creaci\'on de los archivos Master Bias y Master Flats, no se generan funciones sino que el algoritmo est\'a suelto en el c\'odigo. El Master Bias se genera sin problemas y se puede aplicar al resto de los archivos.
+	\item La funci\'on \textit{centroid} genera cx, cy, par ordenado con la ubicaci\'on del centro de masa en la estampilla para la estrella elegida. 
+	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. Para esto, se obtienen los valores de la luz en la estampilla, para el valor fijo cy (se fija el valor en el eje y), desde el centro de la estrella hasta el final de la estampilla (que corresponde a un arreglo en el eje x). 
+	\item La funci\'on \textit{ap\_photometry} devuelve el valor de (hola no se que devuelve exactamente porque CCD)
+\end{itemize}
 
-La figura 2 muestra la interpolaci\'on con Spline. A mayor cantidad de puntos la interpolaci\'on con Spline es mejor aproximaci\'on que la interpolaci\'on con Lagrange. La interpolaci\'on con Spline no presenta el Fen\'omeno de Runge cuando se usa una cantidad grande de puntos.
 
-La figura 3 muestra la diferencia entre ambos m\'etodos de interpolacion y la funci\'on original. Se puede apreciar de ella que la aproximaci\'on Spline es mejor que la aproximaci\'on con Lagrange.
-
-La figura 4 muestra la imagen de la galaxia reconstruida.
 \begin{figure}[!hbpt]
 \centering
 \begin{subfigure}{.5\textwidth}
@@ -259,8 +263,6 @@ La figura 4 muestra la imagen de la galaxia reconstruida.
 
 \fig{lagrange_spl_diff.pdf}{18cm}{13cm}{Diferencia entre la funci\'on original y las aproximaciones de Lagrnge y Spline para 50 puntos en el intervalo $[-1, 1]$.}
 \fig{fixed_galaxy.pdf}{18cm}{13cm}{Imagen arreglada de la galaxia.}
-
-\newpage
 
 \section{Conclusiones}
 Se concluye que una interpolaci\'on con Spline c\'ubico es una mejor aproximaci\'on a mayor cantidad de puntos que una interpolaci\'on con un polinomio de Lagrange, o si es de inter\'es analizar los extremos de la funci\'on a interpolar ya que, a diferencia de \'esta, Spline no presenta el Fen\'omeno de Runge.
