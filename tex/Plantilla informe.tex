@@ -205,7 +205,6 @@ Para cumplir el objetivo de este trabajo, se divide en cuatro pasos:
 
 Cada uno de estos pasos representa una funci\'on (o dos) que deben implementarse en el programa.
 
-<<<<<<< HEAD
 La fotometr\'ia es el \'area de la ciencia donde se mide la luz, es decir, la cantidad de fotones que llegan a partir de una fuente. En particular, en astronom\'ia se cuantifican los fotones que llegan por estrella. Una de las razones por las que esto se estudia es para buscar exoplanetas: al tomar la luz que proviene de una estrella y medirla peri\'odicamente por un tiempo, uno forma una curva de luz: si en esa curva hay decrecimientos notorios (y peri\'odicos, en teor\'ia), puede ser porque hay un planeta orbitando que tapa la luz proveniente de la estrella. 
 
 Hay varias t\'ecnicas de fotometr\'ia; para este trabajo, se utiliza una llamada Fotometr\'ia de Apertura. \'Esta consiste en tomar la imagen de la estrella y elegir un radio de apertura, el cual define un c\'irculo dentro del cual debiese estar todo el flujo de la estrella, para integrar el brillo proveniente de ese c\'irculo (es decir, sumar la informaci\'on de los electrones excitados en ese pixel del CCD). Con esto, se obtiene el flujo de la luz proveniente de toda la estrella. Adem\'as del radio de apertura, se elige un anillo alrededor de la estrella (caracterizado por dos radios) el cual se usa como correcci\'on, ya que el cielo alrededor de la estrella no es completamente negro en la imagen captada.
@@ -215,9 +214,7 @@ El objetivo de este trabajo es armar desde cero las herramientas computacionales
 
 
 \section{Procedimiento}
-=======
 Dado que se puede implementar la fotometr\'ia de apertura para una estrella en una imagen, para generar la curva de luz, se toma la misma estrella en las otras im\'agenes que se proporcionan en los datos y se usa el mismo m\'etodo para calcular, sucesivamente, el valor del flujo de la estrella en cuesti\'on para distintos tiempos.  
->>>>>>> tere-valdivia-master
 
 Para escribir el c\'odigo, se usa el editor EMACS, trabajando desde el servidor Wasabi. Los datos .fits a utilizar son los de la observaci\'on wasp5: cada uno de estos archivos tiene 5 headers, un PrimaryHDU m\'as 4 ImageHDU, dado que la imagen est\'a dividida en 4 franjas. Para probar hacer una curva de luz, se usa una estrella ubicada en el ImageHDU 1.
 
@@ -233,59 +230,6 @@ El c\'odigo realizado contiene las funciones para los 4 pasos, adem\'as de mostr
 	\item La funci\'on \textit{ap\_photometry} devuelve el valor de (hola no se que devuelve exactamente porque CCD)
 \end{itemize}
 
-
-\begin{figure}[!hbpt]
-\centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/lagrange5.pdf}
-  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 5 puntos.}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/lagrange10.pdf}
-  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 10 puntos.}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/lagrange15.pdf}
-  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 15 puntos.}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/lagrange20.pdf}
-  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 20 puntos.}
-\end{subfigure}
-\caption{Distintas interpolaciones utilizando polinomios de Lagrange.}
-\end{figure}
-
-\begin{figure}[!hbpt]
-\centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/spline5.pdf}
-  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 5 puntos.}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/spline10.pdf}
-  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 10 puntos.}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/spline15.pdf}
-  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 15 puntos.}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=9cm, height=7cm]{img/spline20.pdf}
-  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 20 puntos.}
-\end{subfigure}
-\caption{Distintas interpolaciones utilizando Spline.}
-\end{figure}
-
-\fig{lagrange_spl_diff.pdf}{18cm}{13cm}{Diferencia entre la funci\'on original y las aproximaciones de Lagrnge y Spline para 50 puntos en el intervalo $[-1, 1]$.}
-\fig{fixed_galaxy.pdf}{18cm}{13cm}{Imagen arreglada de la galaxia.}
 
 \section{Conclusiones}
 
