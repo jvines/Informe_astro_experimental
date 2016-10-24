@@ -108,8 +108,7 @@ primary = fits.PrimaryHDU(header=header_flats0)
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 1)
                      for n in range(12, 23)])
 
-raw_mean = sp.mean(raw_flat, axis=0)
-flats = raw_mean - master_bias_mean1
+flats = raw_flat - master_bias_mean1
 
 mean_flats = sp.mean(flats)
 
@@ -122,8 +121,7 @@ flats_img1 = fits.ImageHDU(data=master_flats_norm, header=header_flats1)
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 2)
                      for n in range(12, 23)])
 
-raw_mean = sp.mean(raw_flat, axis=0)
-flats = raw_mean - master_bias_mean2
+flats = raw_flat - master_bias_mean2
 
 mean_flats = sp.mean(flats)
 
@@ -136,8 +134,7 @@ flats_img2 = fits.ImageHDU(data=master_flats_norm, header=header_flats2)
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 3)
                      for n in range(12, 23)])
 
-raw_mean = sp.mean(raw_flat, axis=0)
-flats = raw_mean - master_bias_mean3
+flats = raw_flat - master_bias_mean3
 
 mean_flats = sp.median(flats)
 
@@ -150,8 +147,7 @@ flats_img3 = fits.ImageHDU(data=master_flats_norm, header=header_flats3)
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 4)
                      for n in range(12, 23)])
 
-raw_mean = sp.mean(raw_flat, axis=0)
-flats = raw_mean - master_bias_mean4
+flats = raw_flat - master_bias_mean4
 
 mean_flats = sp.median(flats)
 
