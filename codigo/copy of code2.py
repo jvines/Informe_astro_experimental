@@ -12,26 +12,27 @@ Codigo para HDU1
 master_bias = fits.getdata("../master/master_bias.fits")
 master_flats = fits.getdata("../master/master_flats_normalizado.fits")
 
-sci1 = fits.getdata("../data/dat.030.fits") # Get HDU1
+sci1 = fits.getdata("../data/dat.030.fits")  # Get HDU1
 
-sci1= sp.divide(sci1-master_bias, master_flats)
+sci1 = sp.divide(sci1 - master_bias, master_flats)
 
 mn, mx = zscale(sci1)
 
 plt.clf()
-plt.imshow(sci1, vmin = mn, vmax = mx)
+plt.imshow(sci1, vmin=mn, vmax=mx)
 plt.show()
 
-x = 411 # 232
-y = 1838 # 671
-SR = 48 # 30
-stamp = sci1[y-SR:y+SR, x-SR:x+SR]
+x = 411  # 232
+y = 1838  # 671
+SR = 48  # 30
+stamp = sci1[y - SR:y + SR, x - SR:x + SR]
+
 
 def centroid(stamp):
     """
     Calcula el centro de la estrella viendo un centro de masasx
     con el flujo.
-    
+
     Parameters
     ----------
     stamp : (N,)array_like
@@ -52,12 +53,13 @@ def centroid(stamp):
     cx = sp.median(x_vect)
     cy = sp.median(y_vect)
     # Se calcula la coordenada x del centro de la estrella.
-    sum_x = sp.nansum(x_vect*stamp[cy,:])
-    cx = sum_x/sp.nansum(stamp[cy,:])
+    sum_x = sp.nansum(x_vect * stamp[cy, :])
+    cx = sum_x / sp.nansum(stamp[cy, :])
     # Se calcula la coordenada y del centro de la estrella.
-    sum_y = sp.nansum(y_vect*stamp[:,cx])
-    cy = sum_y/sp.nansum(stamp[:,cx])
+    sum_y = sp.nansum(y_vect * stamp[:, cx])
+    cy = sum_y / sp.nansum(stamp[:, cx])
     return cx, cy
+
 
 def radial_profile(stamp, cy, cx):
     """
@@ -83,16 +85,52 @@ def radial_profile(stamp, cy, cx):
     plt.plot(vect_x, flux_x)
     plt.show()
 
+
+def distance(y1, x1, y2, x2):
+    return sp.sqrt((y2 - y1)**2 + (x2 - x1)**2)
+
+
 def ap_phot(stamp, cy, cx, ap, sky1, sky2):
-# TODO: pep8
-    distance = lambda y1, x1, y2, x2: sp.sqrt((y2-y1)**2 + (x2-x1)**2)
+    """
+    Calcula la fotometria de apertura de una estrella dentro de
+    una porcion stamp de una observacion; caracterizada por un centro de
+    masas cy, cx; con un radio ap; y porcion sky2 - sky1 de cielo.
+
+    Parameters
+    ----------
+    stamp : (N,)array_like
+            Arreglo en 2-D, representa una seccion de imagen que
+            engloba a una estrella.
+
+    cx : float
+         Coordenada x del centro de la estrella.
+
+    cy : float
+         Coordenada y del centro de la estrella.
+
+    ap : float
+         Radio estimado de la estrella.
+
+    sky1 : float
+         Radio menor del anillo que representa el cielo en la imagen de la
+         estrella.
+
+    sky2 : float
+         Radio mayor del anillo que representa el cielo en la imagen de la
+         estrella.
+    """
     x_index = sp.arange(sp.shape(stamp)[0])
     y_index = sp.arange(sp.shape(stamp)[1])
-    star = sp.where(distance(y_index[cy], x_index[cx], y_index, x_index) <= ap)[0]
+    dist = distance(y_index[cy], x_index[cx], y_index, x_index)
+
+    star = sp.where(dist <= ap)[0]
     flux = sum(stamp[star, star])
-    sky = sp.where((distance(y_index[cy], x_index[cx], y_index, x_index) > sky1)*(distance(y_index[cy], x_index[cx], y_index, x_index) < sky2))[0]
+
+    sky = sp.where((distance(dist > sky1) * (dist < sky2)))[0]
     sky_flux = sum(stamp[sky, sky])
+
     flux_f = flux - sky_flux
+
     return flux_f
 
 cx, cy = centroid(stamp)
