@@ -103,7 +103,7 @@ longend % Los end son para cada ciclo, por ejemplo endif para los if-else.
 
 % ---------------- Creacion de institucion, departamento y curso.
 \fancyheadoffset[L]{-2cm}
-\fancyhead[L]{\footnotesize{\textbf{\textsf{Universidad de Chile \\ Facultad de Cs. F\'isicas y Matem\'aticas \\ Departamento de F\'isica \\ AS4201-2: Astronom\'ia Experimental. }}}}
+\fancyhead[L]{\footnotesize{\textbf{\textsf{Universidad de Chile \\ Facultad de Cs. F\'isicas y Matem\'aticas \\ Departamento de F\'isica \\ FI3104-1: M\'etodos Num\'ericos para la Ciencia e Ingenier\'ia. }}}}
 \renewcommand{\headrulewidth}{0pt}
 \setlength{\voffset}{-3cm}
 
@@ -120,8 +120,8 @@ longend % Los end son para cada ciclo, por ejemplo endif para los if-else.
 
 % ---------------- Titulo.
 \begin{center}
-	\Large{\textbf{\textsf{Pre Informe.}}} \\
-	\huge{\textbf{\textsf{Fotometr\'ia \'Optica.}}}
+	\Large{\textbf{\textsf{Tarea $\text{N}^\text{o}$3}}} \\
+	\huge{\textbf{\textsf{Interpolaci\'on de Polinomios.}}}
 \end{center}
 
 \vspace*{5.5cm}
@@ -133,25 +133,28 @@ longend % Los end son para cada ciclo, por ejemplo endif para los if-else.
 			\large{%
 				\textsf{%
 					\begin{tabular}{rl}
-						Integrantes: &
-							\begin{tabular}[t]{@{}l@{}}
-								Teresa Valdivia. \\
-								Jos\'e Vines.
-							\end{tabular} \\
+%						Integrantes: &
+%							\begin{tabular}[t]{@{}l@{}}
+%								Integrante 1. \\
+%								Integrante 2.
+%							\end{tabular} \\
+						& Jos\'e Ignacio Vines. \\
 						Profesor: & 
 							\begin{tabular}[t]{@{}l@{}}
-						 		Patricio Rojo.
+						 		Valentino Gonz\'alez.
 							\end{tabular} \\
-						Auxiliar: &
+						Auxiliares: &
 							\begin{tabular}[t]{@{}l@{}}
-								Gustavo Medina.
+								Mario Aguilar. \\
+								Ignacio Armijo. \\
+								Mar\'ia Constanza Flores. \\
 							\end{tabular} \\	
 %						Ayudantes: &
 %							\begin{tabular}[t]{@{}l@{}}
 %								Ayudante 1. \\
 %								Ayudante 2.
 %							\end{tabular} \\		 
-					\end{tabular} \\
+					\end{tabular}
 					Fecha: \today
 				}
 			}
@@ -166,13 +169,43 @@ longend % Los end son para cada ciclo, por ejemplo endif para los if-else.
 \newpage
 
 \tableofcontents % Indice. Descomente para usar.
-%\listoffigures % Lista de figuras. Descomente para usar.
+\listoffigures % Lista de figuras. Descomente para usar.
 %\listoftables % Lista de tablas. Descomente para usar.
 
 \newpage
 
 \section{Introducci\'on}
+La fotometr\'ia es el \'area de la ciencia donde se mide la luz, es decir, la cantidad de fotones que llegan a partir de una fuente. En particular, en astronom\'ia se cuantifican los fotones que llegan por estrella. Una de las razones por las que esto se estudia es para buscar exoplanetas: al tomar la luz que proviene de una estrella y medirla peri\'odicamente por un tiempo, uno forma una curva de luz: si en esa curva hay decrecimientos notorios (y peri\'odicos, en teor\'ia), puede ser porque hay un planeta orbitando que tapa la luz proveniente de la estrella. 
 
+Hay varias t\'ecnicas de fotometr\'ia; para este trabajo, se utiliza una llamada Fotometr\'ia de Apertura. \'Esta consiste en tomar la imagen de la estrella y elegir un radio de apertura, el cual define un c\'irculo dentro del cual debiese estar todo el flujo de la estrella, para integrar el brillo proveniente de ese c\'irculo (es decir, sumar la informaci\'on de los electrones excitados en ese pixel del CCD). Con esto, se obtiene el flujo de la luz proveniente de toda la estrella. Adem\'as del radio de apertura, se elige un anillo alrededor de la estrella (caracterizado por dos radios) el cual se usa como correcci\'on, ya que el cielo alrededor de la estrella no es completamente negro en la imagen captada.
+
+
+El objetivo principal de este trabajo es armar desde cero las herramientas computacionales que se utilizan para hacer fotometr\'ia de apertura. Se debe armar el programa que, teniendo los datos, puedan leerlos y realizar una lectura de la cantidad de luz (cantidad de electrones excitados en la placa CCD). Un objetivo secundario es, usando este programa, hacer un an\'alisis de la curva de luz en el tiempo de una estrella, para determinar si hay alg\'un tr\'ansito en alguna de ellas (y posiblemente un exoplaneta). El programa se hace en lenguaje Python 2.7, usando el paquete astropy.io para el manejo de los archivos que se entregan (de extensi\'on .fits), matplotlib para todos los gr\'aficos e im\'agenes resultantes y scipy para las funciones matem\'aticas necesarias. 
+
+\section{Desarrollo}
+\subsection{Procedimiento}
+
+Para cumplir el objetivo de este trabajo, se divide en cuatro pasos:
+
+\begin{itemize}
+	\item Creaci\'on de los master Bias y Flats: dentro de los archivos se encuentran archivos de tipo Bias (que muestran una foto en negro, de la cual se saca c\'omo es la imagen para ausencia de luz) y Flats (fotos de un domo de color parejo, para encontrar los defectos propios de la c\'amara CCD ocupada). Se necesita un promedio de ambos para corregir las im\'agenes obtenidas. Si llamamos Bias a la imagen promedio obtenida de cada imagen tipo bias y Flats a la imagen promedio obtenida de cada tipo flat ya habi\'endole restado el Bias, para aplicarlo al resto de las imagenes (datos experimentales que llamaremos science) se aplica:
+	\begin{equation*}
+	Final = \frac{science - Bias}{Flats} * <Flats>
+	\end{equation*}
+	\item Detecci\'on del centro de masa de la estrella observada: para integrar el brillo de la estrella se necesita saber d\'onde se ubica su centro. Se estima a trav\'es del centro de masa, que en este caso es el centro de donde llega m\'as brillo. Para calcularlo, si f(x,y) es el valor del brillo 
+	\begin{equation*}
+	cx = \frac{\int xf(x,y) dx dy}{\int f(x,y) dx dy}
+	\end{equation*}
+	\begin{equation*}
+	cy = \frac{\int yf(x,y) dx dy}{\int f(x,y) dx dy}
+	\end{equation*}
+	\item Creaci\'on del perfil radial de la estrella: da la informaci\'on del flujo a cierto radio desde el centro de la estrella. De esta forma se puede determinar el radio de la estrella y lo que corresponde a espacio exterior (tambi\'en llamado cielo). Para esto, se obtienen los valores de la luz en la estampilla, para el valor fijo cy (se fija el valor en el eje y), desde el centro de la estrella hasta el final de la estampilla (que corresponde a un arreglo en el eje x). 
+	\item Fotometr\'ia de apertura: teniendo lo anterior, se puede integrar para obtener el flujo de la estrella. Se suman todos los valores dentro del radio de la estrella y se le resta a este resultado los valores de lo que corresponde a cielo (para que no quede sobreestimado).
+\end{itemize}
+
+Cada uno de estos pasos representa una funci\'on (o dos) que deben implementarse en el programa.
+
+<<<<<<< HEAD
 La fotometr\'ia es el \'area de la ciencia donde se mide la luz, es decir, la cantidad de fotones que llegan a partir de una fuente. En particular, en astronom\'ia se cuantifican los fotones que llegan por estrella. Una de las razones por las que esto se estudia es para buscar exoplanetas: al tomar la luz que proviene de una estrella y medirla peri\'odicamente por un tiempo, uno forma una curva de luz: si en esa curva hay decrecimientos notorios (y peri\'odicos, en teor\'ia), puede ser porque hay un planeta orbitando que tapa la luz proveniente de la estrella. 
 
 Hay varias t\'ecnicas de fotometr\'ia; para este trabajo, se utiliza una llamada Fotometr\'ia de Apertura. \'Esta consiste en tomar la imagen de la estrella y elegir un radio de apertura, el cual define un c\'irculo dentro del cual debiese estar todo el flujo de la estrella, para integrar el brillo proveniente de ese c\'irculo (es decir, sumar la informaci\'on de los electrones excitados en ese pixel del CCD). Con esto, se obtiene el flujo de la luz proveniente de toda la estrella. Adem\'as del radio de apertura, se elige un anillo alrededor de la estrella (caracterizado por dos radios) el cual se usa como correcci\'on, ya que el cielo alrededor de la estrella no es completamente negro en la imagen captada.
@@ -182,9 +215,80 @@ El objetivo de este trabajo es armar desde cero las herramientas computacionales
 
 
 \section{Procedimiento}
+=======
+Dado que se puede implementar la fotometr\'ia de apertura para una estrella en una imagen, para generar la curva de luz, se toma la misma estrella en las otras im\'agenes que se proporcionan en los datos y se usa el mismo m\'etodo para calcular, sucesivamente, el valor del flujo de la estrella en cuesti\'on para distintos tiempos.  
+>>>>>>> tere-valdivia-master
 
-\section{Resultados}
+Para escribir el c\'odigo, se usa el editor EMACS, trabajando desde el servidor Wasabi. Los datos .fits a utilizar son los de la observaci\'on wasp5: cada uno de estos archivos tiene 5 headers, un PrimaryHDU m\'as 4 ImageHDU, dado que la imagen est\'a dividida en 4 franjas. Para probar hacer una curva de luz, se usa una estrella ubicada en el ImageHDU 1.
+
+
+\subsection{Resultados}
+
+El c\'odigo realizado contiene las funciones para los 4 pasos, adem\'as de mostrar las im\'agenes para el primer Header con imagen y una estampilla con una de las estrellas que se elige para trabajar. Para lo que se relaciona con el an\'alisis de alguna estrella en las im\'agenes, se trabaja con una estampilla que a\'isla a la estrella a analizar de las dem\'as.
+
+\begin{itemize}
+	\item En la creaci\'on de los archivos Master Bias y Master Flats, no se generan funciones sino que el algoritmo est\'a suelto en el c\'odigo. El Master Bias se genera sin problemas y se puede aplicar al resto de los archivos.
+	\item La funci\'on \textit{centroid} genera cx, cy, par ordenado con la ubicaci\'on del centro de masa en la estampilla para la estrella elegida. 
+	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. 
+	\item La funci\'on \textit{ap\_photometry} devuelve el valor de (hola no se que devuelve exactamente porque CCD)
+\end{itemize}
+
+
+\begin{figure}[!hbpt]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/lagrange5.pdf}
+  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 5 puntos.}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/lagrange10.pdf}
+  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 10 puntos.}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/lagrange15.pdf}
+  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 15 puntos.}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/lagrange20.pdf}
+  \caption{Interpolaci\'on con Lagrange para un intervalo\\ $[-1,1]$ equiespaciado con 20 puntos.}
+\end{subfigure}
+\caption{Distintas interpolaciones utilizando polinomios de Lagrange.}
+\end{figure}
+
+\begin{figure}[!hbpt]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/spline5.pdf}
+  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 5 puntos.}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/spline10.pdf}
+  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 10 puntos.}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/spline15.pdf}
+  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 15 puntos.}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=9cm, height=7cm]{img/spline20.pdf}
+  \caption{Interpolaci\'on con Spline para un intervalo\\ $[-1,1]$ equiespaciado con 20 puntos.}
+\end{subfigure}
+\caption{Distintas interpolaciones utilizando Spline.}
+\end{figure}
+
+\fig{lagrange_spl_diff.pdf}{18cm}{13cm}{Diferencia entre la funci\'on original y las aproximaciones de Lagrnge y Spline para 50 puntos en el intervalo $[-1, 1]$.}
+\fig{fixed_galaxy.pdf}{18cm}{13cm}{Imagen arreglada de la galaxia.}
 
 \section{Conclusiones}
+
+Se cumple el objetivo de implementar la Fotometr\'ia de apertura. Se generan satisfactoriamente los master bias y flats, se calcula el centro de masa, se obtiene un perfil radial acorde a lo esperado para una estrella y se obtiene un valor al hacer la fotometr\'ia con los pasos anteriores.
 
 \end{document}
