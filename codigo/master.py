@@ -32,10 +32,9 @@ while 1:
     k += 1
     img.close()
 
-print("Hay {} bias y {} flats (dome flat I Bessell).".format(bias_counter, flats_counter))
+print("Hay {} bias y {} flats (dome flat I Bessell).".format(bias_counter,
+flats_counter))
 """
-
-fits.info("../data/dat.001.fits")
 
 biases1 = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 1)
                     for n in range(1, 12)])
@@ -45,10 +44,6 @@ biases3 = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 3)
                     for n in range(1, 12)])
 biases4 = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 4)
                     for n in range(1, 12)])
-
-"""
-Sabemos que funciona el master bias
-"""
 
 header_bias0 = fits.getheader("../data/dat.001.fits", 0)
 header_bias1 = fits.getheader("../data/dat.001.fits", 1)
@@ -70,7 +65,7 @@ l = [primary, bias1, bias2, bias3, bias4]
 hduList = fits.HDUList(l)
 hduList.writeto("../master/master_bias.fits")
 
-fits.setval("../master/master_bias.fits", 'BZERO',
+"""fits.setval("../master/master_bias.fits", 'BZERO',
             value=header_bias1['BZERO'], ext=1)
 fits.setval("../master/master_bias.fits", 'BSCALE',
             value=header_bias1['BSCALE'], ext=1)
@@ -85,7 +80,7 @@ fits.setval("../master/master_bias.fits", 'BSCALE',
 fits.setval("../master/master_bias.fits", 'BZERO',
             value=header_bias4['BZERO'], ext=4)
 fits.setval("../master/master_bias.fits", 'BSCALE',
-            value=header_bias4['BSCALE'], ext=4)
+            value=header_bias4['BSCALE'], ext=4)"""
 
 fits.info("../master/master_bias.fits")
 
@@ -112,50 +107,59 @@ primary = fits.PrimaryHDU(header=header_flats0)
 # imageHDU1
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 1)
                      for n in range(12, 23)])
-flats = raw_flat - master_bias_mean1
 
-mean_flats = sp.median(flats)
+raw_mean = sp.mean(raw_flat, axis=0)
+flats = raw_mean - master_bias_mean1
+
+mean_flats = sp.mean(flats)
 
 flats_normalizado = sp.divide(flats, mean_flats)
 master_flats_norm = sp.mean(flats_normalizado, axis=0)
 
-flats1 = fits.ImageHDU(data=master_flats_norm, header=header_flats1)
+flats_img1 = fits.ImageHDU(data=master_flats_norm, header=header_flats1)
 
 # imageHDU2
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 2)
                      for n in range(12, 23)])
-flats = raw_flat - master_bias_mean2
 
-mean_flats = sp.median(flats)
+raw_mean = sp.mean(raw_flat, axis=0)
+flats = raw_mean - master_bias_mean2
+
+mean_flats = sp.mean(flats)
 
 flats_normalizado = sp.divide(flats, mean_flats)
 master_flats_norm = sp.mean(flats_normalizado, axis=0)
 
-flats2 = fits.ImageHDU(data=master_flats_norm, header=header_flats2)
+flats_img2 = fits.ImageHDU(data=master_flats_norm, header=header_flats2)
 
 # imageHDU3
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 3)
                      for n in range(12, 23)])
-flats = raw_flat - master_bias_mean3
+
+raw_mean = sp.mean(raw_flat, axis=0)
+flats = raw_mean - master_bias_mean3
 
 mean_flats = sp.median(flats)
 
 flats_normalizado = sp.divide(flats, mean_flats)
 master_flats_norm = sp.mean(flats_normalizado, axis=0)
 
-flats3 = fits.ImageHDU(data=master_flats_norm, header=header_flats3)
+flats_img3 = fits.ImageHDU(data=master_flats_norm, header=header_flats3)
 
 # imageHDU4
 raw_flat = sp.array([fits.getdata("../data/dat.%03d.fits" % n, 4)
                      for n in range(12, 23)])
-flats = raw_flat - master_bias_mean4
+
+raw_mean = sp.mean(raw_flat, axis=0)
+flats = raw_mean - master_bias_mean4
 
 mean_flats = sp.median(flats)
 
 flats_normalizado = sp.divide(flats, mean_flats)
 master_flats_norm = sp.mean(flats_normalizado, axis=0)
 
-flats4 = fits.ImageHDU(data=master_flats_norm, header=header_flats4)
-l = [primary, flats1, flats2, flats3, flats4]
+flats_img4 = fits.ImageHDU(data=master_flats_norm, header=header_flats4)
+l = [primary, flats_img1, flats_img2, flats_img3, flats_img4]
 hduList = fits.HDUList(l)
 hduList.writeto("../master/master_flats.fits")
+fits.info("../master/master_flats.fits")
