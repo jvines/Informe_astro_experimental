@@ -203,15 +203,6 @@ Para cumplir el objetivo de este trabajo, se divide en cuatro pasos:
 
 Cada uno de estos pasos representa una funci\'on (o dos) que deben implementarse en el programa.
 
-La fotometr\'ia es el \'area de la ciencia donde se mide la luz, es decir, la cantidad de fotones que llegan a partir de una fuente. En particular, en astronom\'ia se cuantifican los fotones que llegan por estrella. Una de las razones por las que esto se estudia es para buscar exoplanetas: al tomar la luz que proviene de una estrella y medirla peri\'odicamente por un tiempo, uno forma una curva de luz: si en esa curva hay decrecimientos notorios (y peri\'odicos, en teor\'ia), puede ser porque hay un planeta orbitando que tapa la luz proveniente de la estrella. 
-
-Hay varias t\'ecnicas de fotometr\'ia; para este trabajo, se utiliza una llamada Fotometr\'ia de Apertura. \'Esta consiste en tomar la imagen de la estrella y elegir un radio de apertura, el cual define un c\'irculo dentro del cual debiese estar todo el flujo de la estrella, para integrar el brillo proveniente de ese c\'irculo (es decir, sumar la informaci\'on de los electrones excitados en ese pixel del CCD). Con esto, se obtiene el flujo de la luz proveniente de toda la estrella. Adem\'as del radio de apertura, se elige un anillo alrededor de la estrella (caracterizado por dos radios) el cual se usa como correcci\'on, ya que el cielo alrededor de la estrella no es completamente negro en la imagen captada.
-
-
-El objetivo de este trabajo es armar desde cero las herramientas computacionales que se utilizan para hacer fotometr\'ia de apertura. Se debe armar el programa que, teniendo los datos, puedan leerlos y realizar una lectura de la cantidad de luz (cantidad de electrones excitados en la placa CCD). El programa se hace en lenguaje Python 2.7, usando el paquete astropy.io para el manejo de los archivos que se entregan (de extensi\'on .fits), matplotlib para todos los gr\'aficos e im\'agenes resultantes y scipy para las funciones matem\'aticas necesarias.
-
-
-\section{Procedimiento}
 Dado que se puede implementar la fotometr\'ia de apertura para una estrella en una imagen, para generar la curva de luz, se toma la misma estrella en las otras im\'agenes que se proporcionan en los datos y se usa el mismo m\'etodo para calcular, sucesivamente, el valor del flujo de la estrella en cuesti\'on para distintos tiempos.  
 
 Para escribir el c\'odigo, se usa el editor EMACS, trabajando desde el servidor Wasabi. Los datos .fits a utilizar son los de la observaci\'on wasp5: cada uno de estos archivos tiene 5 headers, un PrimaryHDU m\'as 4 ImageHDU, dado que la imagen est\'a dividida en 4 franjas. Para probar hacer una curva de luz, se usa una estrella ubicada en el ImageHDU 1.
@@ -219,7 +210,7 @@ Para escribir el c\'odigo, se usa el editor EMACS, trabajando desde el servidor 
 
 \subsection{Resultados}
 
-El c\'odigo realizado contiene las funciones para los 4 pasos, adem\'as de mostrar las im\'agenes para el primer Header con imagen y una estampilla con una de las estrellas que se elige para trabajar. Para lo que se relaciona con el an\'alisis de alguna estrella en las im\'agenes, se trabaja con una estampilla que a\'isla a la estrella a analizar de las dem\'as.
+El c\'odigo realizado, guardado bajo el nombre  \textit{aperture.py} contiene las funciones y m\'etodos para los 4 pasos, adem\'as de mostrar las im\'agenes para el primer Header con imagen y una estampilla con una de las estrellas que se elige para trabajar. Para lo que se relaciona con el an\'alisis de alguna estrella en las im\'agenes, se trabaja con una estampilla que a\'isla a la estrella a analizar de las dem\'as.
 
 \begin{itemize}
 	\item En la creaci\'on de los archivos Master Bias y Master Flats, no se generan funciones sino que el algoritmo est\'a suelto en el c\'odigo. El Master Bias se genera sin problemas y se puede aplicar al resto de los archivos.
@@ -228,9 +219,21 @@ El c\'odigo realizado contiene las funciones para los 4 pasos, adem\'as de mostr
 	\item La funci\'on \textit{ap\_photometry} devuelve el valor de (hola no se que devuelve exactamente porque CCD)
 \end{itemize}
 
+La funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on wasp5, obteniendo el siguiente gr\'afico:
+
+\begin{figure}[!htbp]
+		\centering
+		\includegraphics[width=0.8\textwidth]{img/flujo.pdf}
+		\caption{Grafico de flujo de la estrella por cada archivo observado}
+		\label{fig:star}
+	\end{figure}
+
 
 \section{Conclusiones}
 
-Se cumple el objetivo de implementar la Fotometr\'ia de apertura. Se generan satisfactoriamente los master bias y flats, se calcula el centro de masa, se obtiene un perfil radial acorde a lo esperado para una estrella y se obtiene un valor al hacer la fotometr\'ia con los pasos anteriores.
+El gr\'afico \ref{fig:star} relaciona el n\'umero del archivo de donde se saca el dato (que es una forma de medir el tiempo) con el valor de la fotometr\'ia para ese momento. Muestra una tendencia decreciente que puede explicarse por diferentes razones posibles: primero, porque el centro de masa puede no ser constante a trav\'es de las fotos (que la c\'amara se mueva levemente puede afectar la posici\'on de la estampilla y del centro de masa dr\'asticamente); segundo, puede que la c\'amara haya estado desenfocada; por \'ultimo, puede tener un efecto considerable de distorsi\'on de la atm\'osfera.
+
+
+En conclusi\'on, se cumple el objetivo de implementar la Fotometr\'ia de apertura. Se generan satisfactoriamente los master bias y flats, se calcula el centro de masa, se obtiene un perfil radial acorde a lo esperado para una estrella y se obtiene un valor al hacer la fotometr\'ia con los pasos anteriores. Lo que no se alcanza a hacer es agregarle el error al valor del flujo que otorga la fotometr\'ia de apertura, el cual proviene de la c\'amara CCD y se sabe realizar en teor\'ia a partir de las clases. Tambi\'en, con los procedimientos creados en este trabajo, no se puede determinar si hay un tr\'ansito planetario frente a esta estrella, ni qu\'e causa los cambios en el flujo. 
 
 \end{document}
