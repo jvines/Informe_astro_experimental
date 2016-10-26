@@ -9,10 +9,10 @@ from zscale import zscale
 Codigo para HDU1
 '''
 
-master_bias = fits.getdata("../master/master_bias.fits", 4)
-master_flats = fits.getdata("../master/master_flats.fits", 4)
+master_bias = fits.getdata("../master/master_bias.fits", 1)
+master_flats = fits.getdata("../master/master_flats.fits", 1)
 
-sci1 = fits.getdata("../data/dat.025.fits", 4)  # Get HDU1
+sci1 = fits.getdata("../data/dat.025.fits", 1)  # Get HDU1
 
 sci11 = sp.divide(sci1 - master_bias, master_flats)
 
@@ -27,16 +27,10 @@ y = 1564  # 671; 1838
 SR = 45  # 30
 
 """
-
-# hdu4
-x = 287
-y = 239
-SR = 30
-
-"""# second :
+# second :
 x = 311
 y = 1451
-SR = 15"""
+SR = 20
 
 """third :
 x = 213
