@@ -51,7 +51,8 @@ for p in paths:
     ref_fluxes[i] = flxref
     i += 1
 
-final_flux = sp.divide(fluxes, ref_fluxes)
+
+final_flux = fluxes / ref_fluxes
 plt.clf()
 plt.plot(range(len(paths)), final_flux, '.')
 plt.savefig("flujo.pdf")
