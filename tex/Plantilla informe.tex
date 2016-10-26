@@ -216,7 +216,7 @@ El c\'odigo realizado, guardado bajo el nombre  \textit{aperture.py} contiene la
 	\item En la creaci\'on de los archivos Master Bias y Master Flats, no se generan funciones sino que el algoritmo est\'a suelto en el c\'odigo. El Master Bias se genera sin problemas y se puede aplicar al resto de los archivos.
 	\item La funci\'on \textit{centroid} genera cx, cy, par ordenado con la ubicaci\'on del centro de masa en la estampilla para la estrella elegida. 
 	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. 
-	\item La funci\'on \textit{ap\_photometry} devuelve el valor de (hola no se que devuelve exactamente porque CCD)
+	\item La funci\'on \textit{ap\_photometry} devuelve el valor del flujo de la estrella.
 \end{itemize}
 
 La funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on wasp5, obteniendo el siguiente gr\'afico:
