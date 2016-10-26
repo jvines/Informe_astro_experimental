@@ -21,10 +21,23 @@ mn, mx = zscale(sci11)
 plt.clf()
 plt.imshow(sci11, vmin=mn, vmax=mx)
 plt.show()
-
+"""
 x = 453  # 232; 411
 y = 1564  # 671; 1838
 SR = 45  # 30
+
+"""
+# second :
+x = 311
+y = 1451
+SR = 25/2.
+
+"""third :
+x = 213
+y = 137
+SR = 15"""
+
+
 stamp = sci11[y - SR:y + SR, x - SR:x + SR]
 
 
