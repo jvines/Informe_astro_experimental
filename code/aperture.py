@@ -24,7 +24,7 @@ plt.show()
 
 x = 453  # 232; 411
 y = 1564  # 671; 1838
-SR = 48  # 30
+SR = 45  # 30
 stamp = sci11[y - SR:y + SR, x - SR:x + SR]
 
 
@@ -138,5 +138,5 @@ vmin, vmax = zscale(stamp)
 plt.imshow(stamp, vmin=vmin, vmax=vmax)
 plt.show()
 radial_profile(stamp, cx, cy)
-flx = ap_phot(stamp, cy, cx, 10, 25, 30)
+flx = ap_phot(stamp, cy, cx, 7, 20, 30)
 print(flx)
