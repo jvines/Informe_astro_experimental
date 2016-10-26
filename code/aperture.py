@@ -127,7 +127,7 @@ def ap_phot(stamp, cy, cx, ap, sky1, sky2):
     flux = sum(stamp[star, star])
 
     sky = sp.where((dist > sky1) * (dist < sky2))[0]
-    sky_flux = sum(stamp[sky, sky])
+    sky_flux = sp.median(stamp[sky, sky])
 
     flux_f = flux - sky_flux
 
