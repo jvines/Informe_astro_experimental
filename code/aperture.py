@@ -22,8 +22,8 @@ plt.clf()
 plt.imshow(sci11, vmin=mn, vmax=mx)
 plt.show()
 
-x = 411  # 232
-y = 1838  # 671
+x = 453  # 232; 411
+y = 1564  # 671; 1838
 SR = 48  # 30
 stamp = sci11[y - SR:y + SR, x - SR:x + SR]
 
