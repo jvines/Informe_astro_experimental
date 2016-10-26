@@ -21,10 +21,23 @@ mn, mx = zscale(sci11)
 plt.clf()
 plt.imshow(sci11, vmin=mn, vmax=mx)
 plt.show()
+"""
+x = 453  # 232; 411
+y = 1564  # 671; 1838
+SR = 45  # 30
 
-x = 411  # 232
-y = 1838  # 671
-SR = 48  # 30
+"""
+# second :
+x = 311
+y = 1451
+SR = 20
+
+"""third :
+x = 213
+y = 137
+SR = 15"""
+
+
 stamp = sci11[y - SR:y + SR, x - SR:x + SR]
 
 
@@ -127,7 +140,7 @@ def ap_phot(stamp, cy, cx, ap, sky1, sky2):
     flux = sum(stamp[star, star])
 
     sky = sp.where((dist > sky1) * (dist < sky2))[0]
-    sky_flux = sum(stamp[sky, sky])
+    sky_flux = sp.median(stamp[sky, sky])
 
     flux_f = flux - sky_flux
 
@@ -138,5 +151,5 @@ vmin, vmax = zscale(stamp)
 plt.imshow(stamp, vmin=vmin, vmax=vmax)
 plt.show()
 radial_profile(stamp, cx, cy)
-flx = ap_phot(stamp, cy, cx, 10, 25, 30)
+flx = ap_phot(stamp, cy, cx, 6, 15, 20)
 print(flx)
