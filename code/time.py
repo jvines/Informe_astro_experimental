@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import scipy as sp
 from astropy.io import fits
 
-from aperture import ap_phot, centroid
+from aperture_error import ap_phot, centroid
 from zscale import zscale
 
 paths1 = glob.glob("../data/dat.0*.fits")

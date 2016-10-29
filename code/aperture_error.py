@@ -1,8 +1,9 @@
-from astropy.io import fits
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import scipy as sp
+import matplotlib.pyplot as plt
 import numpy as np
+import scipy as sp
+from astropy.io import fits
+
 from zscale import zscale
 
 '''
@@ -106,7 +107,7 @@ def distance(y1, x1, y2, x2):
 def ap_phot(stamp, cy, cx, ap, sky1, sky2):
     """
     Calcula la fotometria de apertura, con error asociado, de una estrella
-    dentro de una porcion stamp de una observacion; caracterizada por un 
+    dentro de una porcion stamp de una observacion; caracterizada por un
     centro de masas cy, cx; con un radio ap; y porcion sky2 - sky1 de cielo.
 
     Parameters
@@ -131,23 +132,33 @@ def ap_phot(stamp, cy, cx, ap, sky1, sky2):
     sky2 : float
          Radio mayor del anillo que representa el cielo en la imagen de la
          estrella.
+
+    Returns
+    -------
+    flux_f : float
+         Total flux of the star. This values consists of
+         sum(Star flux - sky flux).
+
+    err : float
+         Estimated error of the calculation.
     """
     x_index = sp.arange(sp.shape(stamp)[0])
     y_index = sp.arange(sp.shape(stamp)[1])
     dist = distance(y_index[cy], x_index[cx], y_index, x_index)
-    Q = 2 # ganancia
+    Q = 2  # ganancia
 
     star = sp.where(dist <= ap)[0]
     N_a = len(star)
-    flux = sum(stamp[star, star])
+    flux = stamp[star, star]
 
     sky = sp.where((dist > sky1) * (dist < sky2))[0]
     N_b = len(sky)
     sky_flux = sp.median(stamp[sky, sky])
     sky_err = sp.std(stamp[sky, sky])
 
-    flux_f = flux - sky_flux
-    err = np.sqrt(flux_f / Q + N_a * (sky_err) ** 2 + (N_a ** 2 / N_b) * (sky_err)**2)
+    flux_f = sum(flux - sky_flux)
+    err = np.sqrt(flux_f / Q + N_a * (sky_err) **
+                  2 + (N_a ** 2 / N_b) * (sky_err)**2)
 
     return flux_f, err
 
@@ -156,5 +167,5 @@ vmin, vmax = zscale(stamp)
 plt.imshow(stamp, vmin=vmin, vmax=vmax)
 plt.show()
 radial_profile(stamp, cx, cy)
-flx = ap_phot(stamp, cy, cx, 6, 15, 20)
-print(flx)
+flx, err = ap_phot(stamp, cy, cx, 6, 15, 20)
+info = "Flux is {} with an estimadted error of {}".format(flx, err)
