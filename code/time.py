@@ -16,6 +16,7 @@ paths3.sort()
 paths = paths1 + paths2 + paths3
 fluxes = sp.zeros_like(paths)
 ref_fluxes = sp.zeros_like(fluxes)
+flux_final = sp.zeros_like(fluxes)
 
 x1 = 453  # 232; 411
 y1 = 1564  # 671; 1838
@@ -24,7 +25,6 @@ SR1 = 45  # 30
 x2 = 311
 y2 = 1451
 SR2 = 25 / 2.
-i = 0
 
 ap = 7
 sky1 = 20
@@ -33,6 +33,8 @@ sky2 = 30
 apr = 6
 sky1r = 15
 sky2r = 20
+
+i = 0
 
 bias = fits.getdata("../master/master_bias.fits", 1)
 flats = fits.getdata("../master/master_flats.fits", 1)
@@ -49,11 +51,10 @@ for p in paths:
     flxref = ap_phot(ref, cry, crx, apr, sky1r, sky2r)
     fluxes[i] = flx
     ref_fluxes[i] = flxref
+    flux_final[i] = flx / flxref
     i += 1
 
-
-final_flux = fluxes / ref_fluxes
 plt.clf()
-plt.plot(range(len(paths)), final_flux, '.')
+plt.plot(range(len(paths)), flux_final, '.')
 plt.savefig("flujo.pdf")
 plt.show()
