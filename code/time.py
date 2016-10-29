@@ -1,10 +1,12 @@
-from astropy.io import fits
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import scipy as sp
 import glob
+
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import scipy as sp
+from astropy.io import fits
+
+from aperture import ap_phot, centroid
 from zscale import zscale
-from aperture import centroid, ap_phot
 
 paths1 = glob.glob("../data/dat.0*.fits")
 paths1.sort()
