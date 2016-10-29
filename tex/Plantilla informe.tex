@@ -198,7 +198,7 @@ Para cumplir el objetivo de este trabajo, la creaci\'on del programa se divide e
 	cy = \frac{\int yf(x,y) dx dy}{\int f(x,y) dx dy}
 	\end{equation*}
 	\item Creaci\'on del perfil radial de la estrella: da la informaci\'on del flujo a cierto radio desde el centro de la estrella. De esta forma se puede determinar el radio de la estrella y lo que corresponde a espacio exterior (tambi\'en llamado cielo). Para esto, se obtienen los valores en la estampilla, para el valor fijo cy (se fija el valor en el eje y), desde el centro de la estrella hasta el final de la estampilla (que corresponde a un arreglo en el eje x). 
-	\item Creaci\'on de la funci\'on de fotometr\'ia de apertura: teniendo lo anterior, se puede integrar para obtener el flujo de la estrella. Se suman todos los valores dentro del radio de la estrella y se le resta a este resultado el valor de la mediana del cielo (para que no quede sobreestimado).
+	\item Creaci\'on de la funci\'on de fotometr\'ia de apertura: teniendo lo anterior, se puede integrar para obtener el flujo de la estrella. A todos los valores del brillo dentro de la estrella se les resta el valor de la mediana del cielo (para que no quede sobreestimado), y luego se suman todos estos valores para obtener el flujo (como una integral num\'erica).
 \end{itemize}
 
 Cada uno de estos pasos representa una funci\'on (o dos) que deben implementarse en el programa.
