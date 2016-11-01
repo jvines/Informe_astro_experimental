@@ -226,7 +226,7 @@ En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica s
 \begin{figure}[!htbp]
 		\centering
 		\includegraphics[width=0.8\textwidth]{img/flujo.pdf}
-		\caption{Grafico de la raz\'on entre el flujo de Wasp 5 y el flujo de una estrella cercana por cada archivo observado}
+		\caption{Grafico del flujo de Wasp 5 por cada segundo.}
 		\label{fig:star}
 	\end{figure}
 
@@ -235,9 +235,9 @@ En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica s
 
 %%Esta parte puede cambiar dependiendo del grafico que nos de
 
-El gr\'afico \ref{fig:star} relaciona el n\'umero del archivo de donde se saca el dato (que es una forma de medir el tiempo) con el valor de la raz\'on entre las fotometr\'ias de ambas estrellas (Wasp 5 sobre otra) para ese momento. Muestra una tendencia decreciente que puede explicarse por diferentes razones posibles: primero, porque el centro de masa puede no ser constante a trav\'es de las fotos (que la c\'amara se mueva levemente puede afectar la posici\'on de la estampilla y del centro de masa dr\'asticamente); segundo, puede que la c\'amara haya estado desenfocada; por \'ultimo, puede tener un efecto considerable de distorsi\'on de la atm\'osfera. Se grafica la raz\'on entre dos luminosidades para corregir en la medida de lo posible ciertos efectos que pueden inducir a un error en la medici\'on, como el paso de una nube, humedad del ambiente, entre otros.
+El gr\'afico \ref{fig:star} relaciona el segundo en que se tom\'o la imagen (considerando el segundo cero como la primera imagen) con el valor de la raz\'on entre las fotometr\'ias de ambas estrellas (Wasp 5 sobre otra) para ese momento. Las tomas se hicieron aproximadamente cada 12 segundos. Muestra una tendencia decreciente que puede explicarse por diferentes razones posibles: primero, porque el centro de masa puede no ser constante a trav\'es de las fotos (que la c\'amara se mueva levemente puede afectar la posici\'on de la estampilla y del centro de masa dr\'asticamente); segundo, puede que la c\'amara haya estado desenfocada; por \'ultimo, puede tener un efecto considerable de distorsi\'on de la atm\'osfera. No se consigue elegir una buena estrella secundaria para hacer la referencia: queda propuesto para futuros trabajos.
 
 %%Cambiar la parte del error si se logra implementar
-En conclusi\'on, se cumple el objetivo de implementar la Fotometr\'ia de apertura. Se generan satisfactoriamente los master  Bias y Flats, se calcula el centro de masa, se obtiene un perfil radial acorde a lo esperado para una estrella y se obtienen las cuentas de la estrella en la imagen, con error inclu\'ido (proveniente de la c\'amara CCD y deducida su f\'ormula en clases), al hacer la fotometr\'ia con los pasos anteriores. Con los procedimientos creados en este trabajo, no se puede determinar si hay un tr\'ansito planetario frente a esta estrella, ni qu\'e causa los cambios en el flujo. 
+En conclusi\'on, se cumple el objetivo de implementar la Fotometr\'ia de apertura. Se generan satisfactoriamente los master  Bias y Flats, se calcula el centro de masa, se obtiene un perfil radial acorde a lo esperado para una estrella y se obtienen las cuentas de la estrella en la imagen, con error inclu\'ido (proveniente de la c\'amara CCD y deducida su f\'ormula en clases), al hacer la fotometr\'ia con los pasos anteriores. Con los procedimientos creados en este trabajo, no se puede determinar si hay un tr\'ansito planetario frente a esta estrella, ni qu\'e causa los cambios en el flujo, por lo que el objetivo secundario no se cumple. 
 
 \end{document}
