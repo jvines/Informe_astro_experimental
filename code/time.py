@@ -49,8 +49,8 @@ for p in paths:
     ref = final[y2 - SR2:y2 + SR2, x2 - SR2:x2 + SR2]
     cx, cy = centroid(stamp)
     crx, cry = centroid(ref)
-    flx = ap_phot(stamp, cy, cx, ap, sky1, sky2)
-    flxref = ap_phot(ref, cry, crx, apr, sky1r, sky2r)
+    flx = ap_phot(stamp, cy, cx, ap, sky1, sky2)[0]
+    flxref = ap_phot(ref, cry, crx, apr, sky1r, sky2r)[0]
     fluxes[i] = flx
     ref_fluxes[i] = flxref
     flux_final[i] = flx / flxref
