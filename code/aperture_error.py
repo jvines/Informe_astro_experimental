@@ -22,6 +22,7 @@ mn, mx = zscale(sci11)
 plt.clf()
 plt.imshow(sci11, vmin=mn, vmax=mx)
 plt.show()
+
 """
 x = 453  # 232; 411
 y = 1564  # 671; 1838
@@ -29,9 +30,10 @@ SR = 45  # 30
 
 """
 # second :
-x = 311
-y = 1451
-SR = 20
+x =  311
+y =  1451
+SR = 30
+
 
 """third :
 x = 213
@@ -167,5 +169,6 @@ vmin, vmax = zscale(stamp)
 plt.imshow(stamp, vmin=vmin, vmax=vmax)
 plt.show()
 radial_profile(stamp, cx, cy)
-flx, err = ap_phot(stamp, cy, cx, 6, 15, 20)
+flx, err = ap_phot(stamp, cy, cx, 5.6, 10, 25)
 info = "Flux is {} with an estimadted error of {}".format(flx, err)
+print(info)
