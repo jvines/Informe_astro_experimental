@@ -43,11 +43,12 @@ longend % Los end son para cada ciclo, por ejemplo endif para los if-else.
 
 % ---------------- Comando mas corto para insertar figuras. Ojo que deben estar guardadas en ./img/
 % \fig{name}{width}{height}{caption}
-\newcommand{\fig}[4]{%
+\newcommand{\fig}[5]{%
 	\begin{figure}[!htbp]
 		\centering
 		\includegraphics[width=#2, height=#3]{img/#1}
 		\caption{#4}
+		\label{fig:#5}
 	\end{figure}
 }
 % ejemplo:
@@ -212,30 +213,28 @@ Para escribir el c\'odigo, se usa el editor EMACS, trabajando desde el servidor 
 
 \subsection{Resultados}
 
-El c\'odigo realizado, guardado bajo el nombre  \textit{aperture.py} contiene las funciones y m\'etodos para los 4 pasos, adem\'as de mostrar las im\'agenes para el primer Header con imagen y una estampilla con una de las estrellas que se elige para trabajar. Para lo que se relaciona con el an\'alisis de alguna estrella en las im\'agenes, se trabaja con una estampilla que a\'isla a la estrella a analizar de las dem\'as.
+El c\'odigo realizado, guardado bajo el nombre  \textit{aperture\_error.py} contiene las funciones y m\'etodos para los 4 pasos, adem\'as de mostrar las im\'agenes para el primer Header con imagen y una estampilla con una de las estrellas que se elige para trabajar. Para lo que se relaciona con el an\'alisis de alguna estrella en las im\'agenes, se trabaja con una estampilla que a\'isla a la estrella a analizar de las dem\'as.
 
 \begin{itemize}
 	\item En la creaci\'on de los archivos Master Bias y Master Flats, no se generan funciones sino que el algoritmo est\'a suelto en el c\'odigo. El Master Bias se genera sin problemas y se puede aplicar al resto de los archivos.
 	\item La funci\'on \textit{centroid} genera cx, cy, par ordenado con la ubicaci\'on del centro de masa en la estampilla para la estrella elegida. 
 	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. 
-	\item La funci\'on \textit{ap\_photometry} devuelve el valor de (hola no se que devuelve exactamente porque CCD)
+	\item La funci\'on \textit{ap\_photometry} devuelve el valor del flujo de la estrella con su error asociado.
 \end{itemize}
 
-En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on  de Wasp 5, obteniendo el siguiente gr\'afico luego de normalizar con otra estrella cercana:
+En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on  de Wasp 5, obteniendo el siguiente gr\'afico:
 
-\begin{figure}[!htbp]
-		\centering
-		\includegraphics[width=0.8\textwidth]{img/flujo.pdf}
-		\caption{Grafico del flujo de Wasp 5 por cada segundo.}
-		\label{fig:star}
-	\end{figure}
+
+\fig{flujo.pdf}{0.9\textwidth}{12cm}{Gr\'afico del flujo de Wasp5 por segundo.}{star}
+
 
 
 \section{Conclusiones}
 
 %%Esta parte puede cambiar dependiendo del grafico que nos de
 
-El gr\'afico \ref{fig:star} relaciona el segundo en que se tom\'o la imagen (considerando el segundo cero como la primera imagen) con el valor de la raz\'on entre las fotometr\'ias de ambas estrellas (Wasp 5 sobre otra) para ese momento. Las tomas se hicieron aproximadamente cada 12 segundos. Muestra una tendencia decreciente que puede explicarse por diferentes razones posibles: primero, porque el centro de masa puede no ser constante a trav\'es de las fotos (que la c\'amara se mueva levemente puede afectar la posici\'on de la estampilla y del centro de masa dr\'asticamente); segundo, puede que la c\'amara haya estado desenfocada; por \'ultimo, puede tener un efecto considerable de distorsi\'on de la atm\'osfera. No se consigue elegir una buena estrella secundaria para hacer la referencia: queda propuesto para futuros trabajos.
+El gr\'afico \ref{fig:star} relaciona el segundo en que se tom\'o la imagen (considerando el segundo cero como la primera imagen) con el valor de la fotometr\'ia de la estrella Wasp 5 para ese momento. Las tomas se hicieron aproximadamente cada 12 segundos. Muestra una tendencia decreciente que puede explicarse por diferentes razones posibles: primero, porque el centro de masa puede no ser constante a trav\'es de las fotos (que la c\'amara se mueva levemente puede afectar la posici\'on de la estampilla y del centro de masa dr\'asticamente); segundo, puede que la c\'amara haya estado desenfocada; por \'ultimo, puede tener un efecto considerable de distorsi\'on de la atm\'osfera. Se pueden apreciar valles prominentes en el flujo en distintos tiempos, esto puede darse por un posible tr\'ansito, que podr\'ia o bien ser un planeta, o nube de polvo que est\'e pasando por delante de la estrella en el momento de la medici\'on.
+No se consigue elegir una buena estrella secundaria para hacer la referencia: queda propuesto para futuros trabajos.
 
 %%Cambiar la parte del error si se logra implementar
 En conclusi\'on, se cumple el objetivo de implementar la Fotometr\'ia de apertura. Se generan satisfactoriamente los master  Bias y Flats, se calcula el centro de masa, se obtiene un perfil radial acorde a lo esperado para una estrella y se obtienen las cuentas de la estrella en la imagen, con error inclu\'ido (proveniente de la c\'amara CCD y deducida su f\'ormula en clases), al hacer la fotometr\'ia con los pasos anteriores. Con los procedimientos creados en este trabajo, no se puede determinar si hay un tr\'ansito planetario frente a esta estrella, ni qu\'e causa los cambios en el flujo, por lo que el objetivo secundario no se cumple. 
