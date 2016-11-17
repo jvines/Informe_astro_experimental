@@ -223,6 +223,16 @@ El c\'odigo realizado, guardado bajo el nombre  \textit{aperture\_error.py} cont
 Los masters realizados se muestran en la figura \ref{fig:bias} y los flats, en la figura \ref{fig:flats}. La estrella buscada, Wasp5, se encuentra en el ImageHDU1 en todos los archivos. El campo que muestra el HDU1 se muestra en la figura \ref{fig:campo}. La escala utilizada para mostrar todos los fits es zscale.
 
 
+\begin{itemize}
+	\item La funci\'on \textit{centroid} genera cx, cy, par ordenado con la ubicaci\'on del centro de masa en la estampilla para la estrella elegida. 
+	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. Con esto se obtiene un perfil radial como el de la figura \ref{fig:rad}.
+	\item La funci\'on \textit{ap\_photometry} devuelve el valor del flujo de la estrella con su error asociado. Para la estrella Wasp5 la fotometr\'ia da valores alrededor de las 700000 cuentas.
+\end{itemize}
+
+En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on  de Wasp 5, obteniendo el gr\'afico \ref{star}.
+
+
+
 \begin{figure}[!ht]
 \centering
 \begin{subfigure}{.5\textwidth}
@@ -291,18 +301,22 @@ Los masters realizados se muestran en la figura \ref{fig:bias} y los flats, en l
 	\label{fig:campo}
 \end{figure}
 
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/radial_prof.pdf}
+	\caption{Ejemplo de perfil radial obtenido a partir de la estrella Wasp5.}
+	\label{fig:rad}
+\end{figure}
 
-\begin{itemize}
-	\item La funci\'on \textit{centroid} genera cx, cy, par ordenado con la ubicaci\'on del centro de masa en la estampilla para la estrella elegida. 
-	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. Con esto se obtiene un perfil radial como el de la figura \ref{rad}
-	\item La funci\'on \textit{ap\_photometry} devuelve el valor del flujo de la estrella con su error asociado. Para la estrella Wasp5 la fotometría da valores alrededor de las 700000 cuentas.
-\end{itemize}
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/radial_prof.pdf}
+	\caption{Gr\'afico del flujo de Wasp5 por segundo.}
+	\label{star}
+\end{figure}
 
-En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on  de Wasp 5, obteniendo el siguiente gr\'afico:
 
-\fig{radial_prof.pdf}{0.8\textwidth}{10cm}{Ejemplo de perfil radial obtenido a partir de la estrella Wasp5.}{rad}
 
-\fig{flujo.pdf}{0.8\textwidth}{10cm}{Gr\'afico del flujo de Wasp5 por segundo.}{star}
 
 
 
