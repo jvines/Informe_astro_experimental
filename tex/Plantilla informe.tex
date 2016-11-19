@@ -199,7 +199,13 @@ Para cumplir el objetivo de este trabajo, la creaci\'on del programa se divide e
 	cy = \frac{\int yf(x,y) dx dy}{\int f(x,y) dx dy}
 	\end{equation*}
 	\item Creaci\'on del perfil radial de la estrella: da la informaci\'on del flujo a cierto radio desde el centro de la estrella. De esta forma se puede determinar el radio de la estrella y lo que corresponde a espacio exterior (tambi\'en llamado cielo). Para esto, se obtienen los valores en la estampilla, para el valor fijo cy (se fija el valor en el eje y), desde el centro de la estrella hasta el final de la estampilla (que corresponde a un arreglo en el eje x). 
-	\item Creaci\'on de la funci\'on de fotometr\'ia de apertura: teniendo lo anterior, se puede integrar para obtener el flujo de la estrella. A todos los valores del brillo dentro de la estrella se les resta el valor de la mediana del cielo (para que no quede sobreestimado), y luego se suman todos estos valores para obtener el flujo (como una integral num\'erica).
+	\item Creaci\'on de la funci\'on de fotometr\'ia de apertura: teniendo lo anterior, se puede integrar para obtener el flujo de la estrella. A todos los valores del brillo dentro de la estrella se les resta el valor de la mediana del cielo (para que no quede sobreestimado), y luego se suman todos estos valores para obtener el flujo (como una integral num\'erica). Junto con calcular el valor, se calcula el error de la fuente, usando la ecuaci\'on:
+	
+	\begin{equation*}
+	\sigma_{src}^2 = \frac{F_{src}}{Q} + N_{ap}\sigma_{sky}^2 + \frac{N_{ap}^2}{N_{sky}}\sigma_{sky}^2
+	\end{equation*}
+	Donde $Q$ es la ganancia, $F_{src}$ es el valor del flujo obtenido, $N_{ap}$ es el n\'umero de pixeles usados en la apertura, $N_{sky}$ son los pixeles del cielo y $\sigma_{sky}^2$ es la varianza que presentan los datos del cielo.
+	
 \end{itemize}
 
 Cada uno de estos pasos representa una funci\'on (o dos) que deben implementarse en el programa.
@@ -215,17 +221,103 @@ Para escribir el c\'odigo, se usa el editor EMACS, trabajando desde el servidor 
 
 El c\'odigo realizado, guardado bajo el nombre  \textit{aperture\_error.py} contiene las funciones y m\'etodos para los 4 pasos, adem\'as de mostrar las im\'agenes para el primer Header con imagen y una estampilla con una de las estrellas que se elige para trabajar. Para lo que se relaciona con el an\'alisis de alguna estrella en las im\'agenes, se trabaja con una estampilla que a\'isla a la estrella a analizar de las dem\'as.
 
+Los masters realizados se muestran en la figura \ref{fig:bias} y los flats, en la figura \ref{fig:flats}. La estrella buscada, Wasp5, se encuentra en el ImageHDU1 en todos los archivos. El campo que muestra el HDU1 se muestra en la figura \ref{fig:campo}. La escala utilizada para mostrar todos los fits es zscale.
+
+
 \begin{itemize}
-	\item En la creaci\'on de los archivos Master Bias y Master Flats, no se generan funciones sino que el algoritmo est\'a suelto en el c\'odigo. El Master Bias se genera sin problemas y se puede aplicar al resto de los archivos.
 	\item La funci\'on \textit{centroid} genera cx, cy, par ordenado con la ubicaci\'on del centro de masa en la estampilla para la estrella elegida. 
-	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. 
-	\item La funci\'on \textit{ap\_photometry} devuelve el valor del flujo de la estrella con su error asociado.
+	\item El perfil radial se genera en una funci\'on llamada \textit{radial\_profile}, donde en el eje x est\'a la distancia desde el centro de la estrella, y en el eje y el valor del brillo. Con esto se obtiene un perfil radial como el de la figura \ref{fig:rad}.
+	\item La funci\'on \textit{ap\_photometry} devuelve el valor del flujo de la estrella con su error asociado. Para la estrella Wasp5 la fotometr\'ia da valores alrededor de las 700000 cuentas.
 \end{itemize}
 
-En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on  de Wasp 5, obteniendo el siguiente gr\'afico:
+En el archivo \textit{time.py}, la funci\'on \textit{ap\_photometry} se aplica sobre todos los datos experimentales de la medici\'on  de Wasp 5, obteniendo el gr\'afico \ref{star}.
 
 
-\fig{flujo.pdf}{0.9\textwidth}{12cm}{Gr\'afico del flujo de Wasp5 por segundo.}{star}
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/bias 1.pdf}
+  \caption{}
+  \label{fig:bias1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/bias 2.pdf}
+  \caption{}
+  \label{fig:bias2}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/bias 3.pdf}
+  \caption{}
+  \label{fig:bias3}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/bias 4.pdf}
+  \caption{}
+  \label{fig:bias4}
+\end{subfigure}
+\caption{Master Bias para los HDU 1, 2, 3 y 4, en escala zscale}
+\label{fig:bias}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/flats 1.pdf}
+  \caption{}
+  \label{fig:flat1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/flats 2.pdf}
+  \caption{}
+  \label{fig:flat2}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/flats 3.pdf}
+  \caption{}
+  \label{fig:flat3}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=10cm, height=8cm]{img/flats 4.pdf}
+  \caption{}
+  \label{fig:flat4}
+\end{subfigure}
+\caption{Master Flats para los HDU 1, 2, 3 y 4, en escala zscale}
+\label{fig:flats}
+\end{figure}
+
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[height=10cm]{img/campo1.pdf}
+	\caption{Campo mostrado por el cuadro HDU1: la estrella Wasp5 es la m\'as brillante, en la esquina inferior derecha.}
+	\label{fig:campo}
+\end{figure}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/radial_prof.pdf}
+	\caption{Ejemplo de perfil radial obtenido a partir de la estrella Wasp5.}
+	\label{fig:rad}
+\end{figure}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/radial_prof.pdf}
+	\caption{Gr\'afico del flujo de Wasp5 por segundo.}
+	\label{star}
+\end{figure}
+
+
+
 
 
 
