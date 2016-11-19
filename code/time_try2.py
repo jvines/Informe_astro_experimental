@@ -77,9 +77,11 @@ for p in paths:
 
 flux_final = fluxes / ref_fluxes
 
+err = sp.fabs(flux_final)*sp.sqrt((error1/fluxes)**2 + (error2/ref_fluxes)**2)
+
 plt.clf()
-plt.plot(time, ref_fluxes, '.')
-# plt.errorbar(time, fluxes, yerr=error1, fmt=None)
+plt.plot(time, flux_final, '.')
+plt.errorbar(time, flux_final, yerr=err, fmt=None)
 plt.xlabel('Tiempo [$s$]')
 plt.ylabel('Cuentas [$ADU$]')
 plt.title('Cuociente entre el flujo de Wasp5 y una\nestrella\
